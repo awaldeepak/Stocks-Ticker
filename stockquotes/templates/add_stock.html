@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<h1>Add a Stock...</h1>
+	<br/>
+	
+	<form action="{% url 'add_stock' %}" class="form-inline my-2 my-lg-0" method="POST">
+		{% csrf_token %}
+      	<input class="form-control mr-sm-2" type="search" placeholder="Enter a Stock" aria-label="Search" name="ticker">
+      	<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add Stock</button>
+	</form>
+
+	<br/>
+
+	{% if ticker %}
+		<table class="table table-bordered table-hover">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Company Name</th>
+					<th scope="col">Price</th>
+					<th scope="col">Previous Close</th>
+					<th scope="col">Market Cap</th>
+					<th scope="col">YTD Change</th>
+					<th scope="col">52 Week High</th>
+					<th scope="col">52 Week Low</th>
+					
+				</tr>
+		  	</thead>
+		  	<tbody>
+			  	{% for stock in output %}
+				    <tr>
+				    	
+						<th scope="row">{{ stock.companyName }}</th>
+						<td>${{ stock.latestPrice }}</td>
+						<td>${{ stock.previousClose }}</td>
+						<td>{{ stock.marketCap }}</td>
+						<td>{{ stock.ytdChange }}%</td>
+						<td>{{ stock.week52High }}</td>
+						<td>{{ stock.week52Low }}</td>
+						
+				    </tr>
+				{% endfor %}
+
+		  	</tbody>
+		</table>
+
+	{% else %}
+
+		You haven't added any stocks yet! Please add stocks to your watchlist.
+
+	{% endif%}
+<br/>
+
+	{% if ticker %}
+		{% for stock in ticker %}
+			<a href="{% url 'delete' stock.id %}" class="btn btn-secondary">Delete {{stock}}</a>&nbsp;&nbsp;
+		{% endfor %}
+	
+	{% else %}
+		You don't have any stocks to delete...
+	{% endif%}
+	
+
+{% endblock %}
